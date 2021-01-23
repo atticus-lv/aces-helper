@@ -219,7 +219,7 @@ def draw_menu(self, context):
     layout = self.layout
     # layout.menu('AH_MT_CSMenu')
     # layout.menu('AH_MT_UtilityCSMenu', text='ACES Utility')
-    pref = bpy.context.preferences.addons.get('aces helper').preferences
+    pref = bpy.context.preferences.addons.get(__name__).preferences
     nt = context.space_data.edit_tree
     node = nt.nodes.active
     if node.bl_idname in tex_nodes and node.image:
