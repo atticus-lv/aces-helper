@@ -4,12 +4,13 @@
 #   2021.1.22 initial commit
 # v0.2
 #   2021.1.23 use preset operator
+#   add support for compositor
 
 
 bl_info = {
     "name"       : "aces helper",
     "author"     : "Atticus",
-    "version"    : (0, 2),
+    "version"    : (0, 2, 1),
     "blender"    : (2, 90, 0),
     "location"   : "Shader Editor > Right Click Menu",
     "description": "heple changing colorspace with eevee/cycles",
@@ -30,6 +31,7 @@ from .swith_cs import *
 tex_nodes = {
     'ShaderNodeTexEnvironment',
     'ShaderNodeTexImage',
+    'CompositorNodeImage',
 }
 
 
