@@ -5,14 +5,15 @@
 # v0.2
 #   2021.1.23 use preset operator
 #   add support for compositor
-
+# v0.3
+#   2021.2.3 add properties panel
 
 bl_info = {
     "name"       : "aces helper",
     "author"     : "Atticus",
-    "version"    : (0, 2, 1),
+    "version"    : (0, 3, 0),
     "blender"    : (2, 90, 0),
-    "location"   : "Shader Editor > Right Click Menu",
+    "location"   : "Shader Editor > Right Click Menu / Properties Panel > ACES Helper",
     "description": "heple changing colorspace with eevee/cycles",
     "warning"    : "",
     "doc_url"    : "",
@@ -23,10 +24,11 @@ import os
 import bpy
 from bpy.props import *
 from bpy.types import Operator, AddonPreferences, Menu, Panel
+
 from bl_operators.presets import AddPresetBase
 from bl_ui.utils import PresetPanel
 
-from .swith_cs import *
+from .utils import get_blender_cs_folder
 
 tex_nodes = {
     'ShaderNodeTexEnvironment',
@@ -35,27 +37,50 @@ tex_nodes = {
 }
 
 
-def fill_cs_folder(self, context):
-    self.cs_folder_path = get_blender_cs_folder() + '\\'
+def get_pref():
+    return bpy.context.preferences.addons.get(__name__).preferences
+
+
+class AH_OT_OpenFolder(Operator):
+    bl_idname = 'ah.open_folder'
+    bl_label = 'Open Folder'
+
+    path: StringProperty(name='Path')
+
+    def execute(self, context):
+        if self.path:
+            os.startfile(self.path)
+
+        return {'FINISHED'}
 
 
 class AH_Preference(AddonPreferences):
     bl_idname = __name__
 
-    # zip_file_path: StringProperty()
-    cs_folder_path: StringProperty(update=fill_cs_folder)
     preset_mode: BoolProperty(name='Use Preset Mode', default=False)
 
     def draw(self, context):
         layout = self.layout
+        row = layout.row()
 
-        col = layout.column(align=1)
-        col.label(text='Color Management Folder')
-        row = col.row(align=1)
-        row.prop(self, 'cs_folder_path', text='')
-        row.operator('buttons.file_browse', icon='FILEBROWSER', text='')
+        row.operator('ah.open_folder').path = get_blender_cs_folder() + '\\'
+        row.prop(self, 'preset_mode', text='Preset Mode', toggle=1)
 
-        layout.prop(self, 'preset_mode', text='Preset Mode')
+
+class AH_PT_Panel(Panel):
+    bl_label = "ACES Helper"
+    bl_idname = "AH_PT_Panel"
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = "render"
+
+    def draw(self, context):
+        pref = get_pref()
+        layout = self.layout
+        row = layout.row()
+
+        row.prop(pref, 'preset_mode', text='Preset Mode', toggle=1)
+        row.operator('ah.open_folder').path = get_blender_cs_folder() + '\\'
 
 
 class AH_MT_CSPresetsMenu(Menu):
@@ -126,7 +151,9 @@ def add_res_preset_to_user():
 
 
 classes = [
+    AH_OT_OpenFolder,
     AH_Preference,
+    AH_PT_Panel,
     # preset
     AH_MT_CSPresetsMenu,
     AH_PT_CSPresetPanel,
