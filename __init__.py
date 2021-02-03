@@ -7,11 +7,12 @@
 #   add support for compositor
 # v0.3
 #   2021.2.3 add properties panel
+#   fix add preset problem
 
 bl_info = {
     "name"       : "aces helper",
     "author"     : "Atticus",
-    "version"    : (0, 3, 0),
+    "version"    : (0, 3, 1),
     "blender"    : (2, 90, 0),
     "location"   : "Shader Editor > Right Click Menu / Properties Panel > ACES Helper",
     "description": "heple changing colorspace with eevee/cycles",
