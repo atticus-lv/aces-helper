@@ -22,6 +22,7 @@ bl_info = {
 
 import os
 import bpy
+import shutil
 from bpy.props import *
 from bpy.types import Operator, AddonPreferences, Menu, Panel
 
