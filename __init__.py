@@ -10,15 +10,15 @@
 #   fix add preset problem
 
 bl_info = {
-    "name"       : "aces helper",
-    "author"     : "Atticus",
-    "version"    : (0, 3, 1),
-    "blender"    : (2, 90, 0),
-    "location"   : "Shader Editor > Right Click Menu / Properties Panel > ACES Helper",
+    "name": "aces helper",
+    "author": "Atticus",
+    "version": (0, 3, 1),
+    "blender": (2, 90, 0),
+    "location": "Shader Editor > Right Click Menu / Properties Panel > ACES Helper",
     "description": "heple changing colorspace with eevee/cycles",
-    "warning"    : "",
-    "doc_url"    : "",
-    "category"   : "Render",
+    "warning": "",
+    "doc_url": "",
+    "category": "Render",
 }
 
 import os
@@ -41,6 +41,53 @@ tex_nodes = {
 
 def get_pref():
     return bpy.context.preferences.addons.get(__name__).preferences
+
+
+class AH_OT_SearchCS(Operator):
+    bl_idname = 'ah.search_cs'
+    bl_property = "cs_enum"
+    bl_label = 'Search ColorSpace'
+
+    _enum_item_hack = []
+
+    def cs_enum_items(self, context):
+        enum_items = AH_OT_SearchCS._enum_item_hack
+        enum_items.clear()
+        # get node and all color space
+
+        nt = context.space_data.node_tree
+        node = nt.nodes.active
+        if node and node.bl_idname in tex_nodes and node.image:
+            prop = type(node.image.colorspace_settings).bl_rna.properties["name"]
+            cs_names = [e.identifier for e in prop.enum_items]
+            # append to enum_items
+            for name in cs_names:
+                enum_items.append((name, name, ''))
+            print(enum_items)
+            return enum_items
+
+    populate = cs_enum_items
+
+    cs_enum: EnumProperty(
+        name="cs Type",
+        description="cs type",
+        items=populate,
+    )
+
+    def execute(self, context):
+        nt = context.space_data.node_tree
+        node = nt.nodes.active
+        if node.bl_idname in tex_nodes and node.image:
+            node.image.colorspace_settings.name = self.cs_enum
+        return {"FINFISHED"}
+
+    def invoke(self, context, event):
+        nt = context.space_data.node_tree
+        node = nt.nodes.active
+        if node:
+            context.window_manager.invoke_search_popup(self)
+
+        return {'FINISHED'}
 
 
 class AH_OT_OpenFolder(Operator):
@@ -89,7 +136,10 @@ class AH_MT_CSPresetsMenu(Menu):
     bl_label = 'colorspace Presets'
     preset_subdir = 'AH/colorspace_presets'
     preset_operator = 'script.execute_preset'
-    draw = Menu.draw_preset
+
+    def draw(self, context):
+        self.layout.operator("ah.search_cs", icon='VIEWZOOM')
+        Menu.draw_preset(self, context)
 
 
 class AH_PT_CSPresetPanel(PresetPanel, Panel):
@@ -153,6 +203,7 @@ def add_res_preset_to_user():
 
 
 classes = [
+    AH_OT_SearchCS,
     AH_OT_OpenFolder,
     AH_Preference,
     AH_PT_Panel,
