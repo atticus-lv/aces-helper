@@ -8,14 +8,17 @@
 # v0.3
 #   2021.2.3 add properties panel
 #   fix add preset problem
+# v0.4
+#   2021.5.16 add search operator
+#   polish ui
 
 bl_info = {
     "name": "aces helper",
     "author": "Atticus",
-    "version": (0, 3, 1),
+    "version": (0, 4, 0),
     "blender": (2, 90, 0),
-    "location": "Shader Editor > Right Click Menu / Properties Panel > ACES Helper",
-    "description": "heple changing colorspace with eevee/cycles",
+    "location": "Node Editor > Right Click Menu with image nodes / Properties Panel > ACES Helper",
+    "description": "help changing colorSpace with eevee/cycles",
     "warning": "",
     "doc_url": "",
     "category": "Render",
@@ -137,13 +140,17 @@ class AH_MT_CSPresetsMenu(Menu):
     preset_subdir = 'AH/colorspace_presets'
     preset_operator = 'script.execute_preset'
 
+    # rewrite the draw method
     def draw(self, context):
-        self.layout.operator("ah.search_cs", icon='VIEWZOOM')
+        layout = self.layout
+        layout.operator("ah.search_cs", icon='VIEWZOOM')
+
+        layout.separator()
         Menu.draw_preset(self, context)
 
 
 class AH_PT_CSPresetPanel(PresetPanel, Panel):
-    bl_label = 'AH Colorspace Presets'
+    bl_label = 'ColorSpace Presets'
     preset_subdir = 'AH/colorspace_presets'
     preset_operator = 'script.execute_preset'
     preset_add_operator = 'ah.add_cs_preset'
@@ -221,7 +228,7 @@ def draw_menu(self, context):
     node = nt.nodes.active
     if node.bl_idname in tex_nodes and node.image:
         if not pref.preset_mode:
-            layout.menu('AH_MT_CSPresetsMenu', text='ACES Preset')
+            layout.menu('AH_MT_CSPresetsMenu', text='ACES Helper')
         else:
             layout.popover(panel='AH_PT_CSPresetPanel')
 

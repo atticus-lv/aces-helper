@@ -1,10 +1,11 @@
 # aces helper [blender addon]
+This is a simple addon for changing colorspace for aces
 
-> this is a simple addon for changing colorspace for aces
->
 >**v0.2: support cycles and eevee now,support custom colorspace as preset**
 >
 >**v0.3: add properties panel/open foler button**
+>
+>**v0.4: add search operator**
 
 ![img](README.assets/img.png)
 
@@ -16,7 +17,7 @@ right click on the **image / environment texture** node to change it to aces col
 + for color texture, you should choose "Utility - sRGB - Texture"
 + for normal/roughtness/metallic/... texture,you should "Utility - Raw"
 
-### Custom Preset
+## Custom Preset
 
 Properties panel/ACES Helper and enable **preset mode**, then you can add preset with your selected node.
 
