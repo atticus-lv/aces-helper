@@ -82,7 +82,7 @@ class AH_OT_SearchCS(Operator):
         node = nt.nodes.active
         if node.bl_idname in tex_nodes and node.image:
             node.image.colorspace_settings.name = self.cs_enum
-        return {"FINFISHED"}
+        return {"FINISHED"}
 
     def invoke(self, context, event):
         nt = context.space_data.node_tree
