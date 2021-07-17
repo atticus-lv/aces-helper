@@ -11,11 +11,14 @@
 # v0.4
 #   2021.5.16 add search operator
 #   polish ui
+# v0.5
+#   2021.7.18 add support for 3.0.0 alpha
+
 
 bl_info = {
     "name": "aces helper",
     "author": "Atticus",
-    "version": (0, 4, 0),
+    "version": (0, 5, 0),
     "blender": (2, 90, 0),
     "location": "Node Editor > Right Click Menu with image nodes / Properties Panel > ACES Helper",
     "description": "help changing colorSpace with eevee/cycles",
@@ -183,7 +186,15 @@ def get_files_from_path(path):
 
 
 def add_res_preset_to_user():
-    presets_folder = bpy.utils.user_resource('SCRIPTS', "presets")
+    # seems the API document did not update
+    #######################################
+    if bpy.app.version >= (3,0,0):
+        presets_folder = os.path.join(bpy.utils.user_resource('SCRIPTS'),"presets")
+        addon_folder = os.path.join(bpy.utils.user_resource('SCRIPTS'),"addons")
+    else:
+        presets_folder = bpy.utils.user_resource('SCRIPTS',"presets")
+        addon_folder = bpy.utils.user_resource('SCRIPTS', "addons")
+
     ah_presets_folder = os.path.join(presets_folder, 'AH', 'colorspace_presets')
 
     if not os.path.exists(ah_presets_folder):
@@ -191,7 +202,7 @@ def add_res_preset_to_user():
 
     destination = get_files_from_path(ah_presets_folder)
 
-    addon_folder = bpy.utils.user_resource('SCRIPTS', "addons")
+
     bundled_presets_folder = os.path.join(addon_folder, __name__, 'preset')
     source = get_files_from_path(bundled_presets_folder)
 
