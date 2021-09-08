@@ -11,7 +11,7 @@ This is a simple addon for changing colorspace for aces
 
 ## How to use
 
-right click on the **image / environment texture** node to change it to aces color space 
+right click on the **image / environment texture** node to change it to access color space 
 
 + for hdr texture, you should choose "Utility - Linear - sRGB"
 + for color texture, you should choose "Utility - sRGB - Texture"
