@@ -95,6 +95,8 @@ class AH_OT_SearchCS(Operator):
 
         return {'FINISHED'}
 
+import sys
+import subprocess
 
 class AH_OT_OpenFolder(Operator):
     bl_idname = 'ah.open_folder'
@@ -104,7 +106,10 @@ class AH_OT_OpenFolder(Operator):
 
     def execute(self, context):
         if self.path:
-            os.startfile(self.path)
+            if sys.platform == 'win32':
+                os.startfile(self.path)
+            elif sys.platform == 'darwin':
+                subprocess.Popen(["explorer", "/select,", self.path])
 
         return {'FINISHED'}
 
