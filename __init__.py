@@ -106,10 +106,7 @@ class AH_OT_OpenFolder(Operator):
 
     def execute(self, context):
         if self.path:
-            if sys.platform == 'win32':
-                os.startfile(self.path)
-            elif sys.platform == 'darwin':
-                subprocess.Popen(["explorer", "/select,", self.path])
+            bpy.ops.wm.path_open(filepath = self.path)
 
         return {'FINISHED'}
 
