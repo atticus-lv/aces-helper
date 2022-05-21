@@ -15,7 +15,7 @@ right click on the **image / environment texture** node to change it to aces col
 
 + for hdr texture, you should choose "Utility - Linear - sRGB"
 + for color texture, you should choose "Utility - sRGB - Texture"
-+ for normal/roughtness/metallic/... texture,you should "Utility - Raw"
++ for normal/roughness/metallic/... texture,you should "Utility - Raw"
 
 ## Custom Preset
 
